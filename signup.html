@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sign Up</title>
+    <style>
+        .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .logo-container {
+    text-align: center;
+  }
+  
+  .logo-container img {
+    width: 120px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+  }
+  
+  label {
+    margin-bottom: 5px;
+  }
+  
+  input[type="text"], input[type="password"], input[type="email"] {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  
+  input[type="submit"] {
+    background-color: #0070c9;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  input[type="submit"]:hover {
+    background-color: #0061a0;
+  }
+  
+  .fine-print {
+    font-size: 12px;
+    margin-top: 20px;
+    color: #999;
+    line-height: 1.2;
+  }
+  
+  .fine-print a {
+    color: #0070c9;
+    text-decoration: none;
+  }
+  
+  .fine-print a:hover {
+    text-decoration: underline;
+  }
+  
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo-container">
+        <img src="download.png" alt="Logo">
+      </div>
+      <form method="post" action="/signup">
+        <h1>Create Your LeetCode ID</h1>
+        <label for="username">Full Name:</label>
+        <input type="text" id="fullname" name="username" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <p class="fine-print">Passwords must be at least 8 characters, including a number, an uppercase letter, and a lowercase letter.</p>
+        <input type="submit" value="Create ID">
+      </form>
+    </div>
+  </body>
+</html>
+

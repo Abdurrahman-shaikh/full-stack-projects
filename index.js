@@ -1,70 +1,66 @@
-const express = require('express')
-const bodyParser = require('body-parser');
-const app = express()
-const port = 3000
+const express = require("express");
+const bodyParser = require("body-parser");
+const app = express();
+const port = 3000;
+const mysql = require('mysql2');
+const session = require("express-session");
+
+app.use(session({
+  secret: "your secret key here",
+  resave: false,
+  saveUninitialized: true
+}));
+
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'USER',
+  password: 'PASS',
+  database: 'DATABASE'
+});
 const users = [];
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
+app.get("/signup", (req, res) => {
+  res.sendFile(__dirname + "/signup.html");
+});
 
-app.get('/signup', (req, res) => {
-    res.send(`
-      <html>
-        <head>
-          <title>Sign Up</title>
-        </head>
-        <body>
-          <h1>Sign Up</h1>
-          <form method="post" action="/signup">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username"><br><br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password"><br><br>
-            <input type="submit" value="Submit">
-          </form>
-        </body>
-      </html>
-    `);
+app.get("/login", (req, res) => {
+  res.sendFile(__dirname + "/login.html");
+});
+
+app.post("/login", (req, res) => {
+  const { username, password,email } = req.body;
+  const sql = "SELECT * FROM login_info WHERE username = ? AND password = ?";
+  connection.query(sql, [username, password,email], (err, results) => {
+    if (err) throw err;
+    if (results.length > 0) {
+      // User is authenticated, create a session
+      req.session.user = {
+        id: results[0].id,
+        username: results[0].username,
+        email: results[0].email,
+      };
+      res.send("Login successful");
+    } else {
+      // Invalid credentials
+      res.send("Invalid username or password");
+    }
   });
-  
-
-app.get('/login', (req, res) => {
-    res.send(`
-      <h1>Login Page</h1>
-      <form method="POST" action="/login">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username"><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br><br>
-        <button type="submit">Login</button>
-      </form>
-    `);
-  });
-
-  app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find(user => user.username === username && user.password === password);
-  if (user) {
-    res.status(200).send(`Welcome back, ${user.username}!`);
-  } else {
-    res.send('Invalid username or password!');
-  }
 });
 
 
-  app.post('/signup', (req, res) => {
-    const { username, password } = req.body;
-    
-    // Push a new object to the users array with the signup information
-    users.push({ username, password });
-    
-    res.send(`Thanks for signing up! ${users[0],users[1]}`);
+app.post("/signup", (req, res) => {
+  const { username, password, email } = req.body;
+  const sql = "INSERT INTO login_info (username, password, email) VALUES (?, ?, ?)";
+  connection.query(sql, [username, password, email], (err, results) => {
+    if (err) throw err;
+    console.log("User added to database");
+    res.send("User added to database");
   });
-  
-  app.get('/route3', (req, res) => {
-    res.send('Hello World! from route2')
-  })
+});
+
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Example app listening on port ${port}`);
 })
